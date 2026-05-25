@@ -14,7 +14,7 @@ powershell -ExecutionPolicy Bypass -File setup_v2.ps1
 chmod +x setup_v2.sh && ./setup_v2.sh
 ```
 
-Script tự tạo toàn bộ cấu trúc sau:
+Script tự tạo toàn bộ cấu trúc sau (Mặc định `D:\Security\` trên Windows hoặc `~/Security/` trên Linux/Mac):
 
 ```
 D:\Security\          (Windows)
@@ -24,7 +24,6 @@ D:\Security\          (Windows)
 │   ├── lessons.md                   ← Ghi lại kinh nghiệm giữa các session
 │   ├── pentest_state_template.json  ← Template brain state cho mỗi engagement
 │   ├── .gemini\
-│   │   ├── settings.json            ← MCP config (Burp Suite)
 │   │   └── commands\                ← 11 slash commands (TOML)
 │   │       ├── new-engagement.toml
 │   │       ├── session-start.toml   ← [MỚI] Auto-load context
@@ -41,7 +40,8 @@ D:\Security\          (Windows)
 │   ├── wordlists\
 │   └── scripts\
 │       ├── scope_guard.py           ← Tool Gateway: validate target vs scope
-│       └── result_aggregator.py     ← Normalize + dedup tool output
+│       ├── result_aggregator.py     ← Normalize + dedup tool output
+│       └── excel_extractor.py       ← Đọc file Excel xuất báo cáo
 │
 ├── engagements\
 │   └── 2026-05-ACME-webapp\
@@ -78,7 +78,8 @@ D:\Security\          (Windows)
 | **Node.js 20+** | https://nodejs.org/ | Runtime cho Gemini CLI |
 | **Gemini CLI** | `npm install -g @google/gemini-cli` | AI engine |
 | **Google API Key** | https://aistudio.google.com/ | Free: 1000 req/day |
-| **Python 3.8+** | https://python.org/ | scope_guard.py + result_aggregator.py |
+| **Python 3.8+** | https://python.org/ | Chạy scripts phụ trợ |
+| **OpenPyXL** | `pip install openpyxl` | Thư viện Python đọc Excel báo cáo |
 | **Burp Suite Pro** | https://portswigger.net/ | Proxy + MCP server |
 
 **Setup API key:**
@@ -99,9 +100,8 @@ gemini    # Lần đầu → browser auth tự động
 
 | File | Sửa gì |
 |------|---------|
-| `_global\GEMINI.md` | Chỉnh path scripts nếu không dùng default path |
 | `bugbounty\GEMINI.md` | Điền username HackerOne / Bugcrowd / Intigriti |
-| `_global\.gemini\settings.json` | Nếu Burp chạy port khác 9876 |
+| `~/.gemini/settings.json` | Cấu hình Burp Suite đã được merge tự động. Cần chỉnh nếu đổi port. |
 | `_global\wordlists\` | Bỏ wordlist hay dùng vào đây (SecLists, custom) |
 
 ---
